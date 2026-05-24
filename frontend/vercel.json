@@ -1,16 +1,5 @@
 {
-  "buildCommand": "next build",
-  "installCommand": "npm install",
-  "outputDirectory": ".next",
   "framework": "nextjs",
-  "nodeVersion": "20.x",
-  "env": {
-    "NEXT_PUBLIC_API_URL": {
-      "description": "Backend API base URL (must include /api at the end)",
-      "required": true,
-      "default": "http://localhost:8000/api"
-    }
-  },
   "headers": [
     {
       "source": "/:path*",
