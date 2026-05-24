@@ -1,0 +1,33 @@
+# ============================================
+# IntelliJudge Backend — Python Dependencies
+# ============================================
+# Install with: pip install -r requirements.txt
+# ============================================
+
+# --- Core Framework ---
+fastapi==0.115.12          # Async web framework (auto-generates Swagger docs)
+uvicorn[standard]==0.34.2  # ASGI server to run FastAPI
+
+# --- Settings & Environment ---
+pydantic-settings==2.9.1   # Load .env vars into typed Python classes
+python-dotenv==1.1.0       # Read .env files
+email-validator==2.2.0     # Enables EmailStr validation in Pydantic schemas
+
+# --- Phase 2: Database & ORM ---
+sqlalchemy[asyncio]==2.0.40  # ORM — maps Python classes to database tables
+asyncpg==0.30.0              # Async PostgreSQL driver (fastest for Python)
+alembic==1.15.2              # Database migration tool (like git for your DB schema)
+
+# --- Phase 3: Authentication ---
+bcrypt==4.3.0                        # Password hashing (one-way, salted)
+python-jose[cryptography]==3.3.0     # JWT encode / decode
+
+# --- Phase 4: OCR Pipeline ---
+cloudinary==1.44.0         # Image CDN — upload screenshots, get CDN URLs
+easyocr==1.7.2             # OCR engine — extracts text from images (installs PyTorch)
+Pillow==11.2.1             # Image processing — open/convert images for EasyOCR
+httpx==0.28.1              # Async HTTP client (used here + Judge0 in Phase 8)
+python-multipart==0.0.20   # Required by FastAPI to parse multipart/form-data file uploads
+
+# --- Phase 5: AI Reconstruction ---
+openai==1.65.5   # OpenAI-compatible API (works with Groq) — problem reconstruction & test case generation

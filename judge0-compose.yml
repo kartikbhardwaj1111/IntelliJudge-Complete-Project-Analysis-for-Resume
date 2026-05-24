@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+
+  # ── PostgreSQL (Judge0's own DB — separate from your app's DB) ──
+  judge0-db:
+    image: postgres:13
+    container_name: judge0-db
+    environment:
+      POSTGRES_PASSWORD: judge0
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+    volumes:
+      - judge0_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # ── Redis (job queue for Judge0) ──
+  judge0-redis:
+    image: redis:6
+    container_name: judge0-redis
+    restart: unless-stopped
+
+  # ── Judge0 API Server ──
+  judge0-server:
+    image: judge0/judge0:1.13.1
+    container_name: judge0-server
+    depends_on:
+      - judge0-db
+      - judge0-redis
+    ports:
+      - "2358:3000"
+    environment:
+      POSTGRES_HOST: judge0-db
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0
+      REDIS_URL: redis://judge0-redis:6379
+      ENABLE_WAIT_RESULT: "true"
+    privileged: true
+    restart: unless-stopped
+
+  # ── Judge0 Workers (actually executes the code) ──
+  judge0-workers:
+    image: judge0/judge0:1.13.1
+    container_name: judge0-workers
+    depends_on:
+      - judge0-db
+      - judge0-redis
+    command: ["./scripts/workers"]
+    environment:
+      POSTGRES_HOST: judge0-db
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0
+      REDIS_URL: redis://judge0-redis:6379
+    privileged: true
+    restart: unless-stopped
+
+volumes:
+  judge0_db_data:

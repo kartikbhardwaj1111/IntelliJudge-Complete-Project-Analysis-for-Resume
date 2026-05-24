@@ -1,0 +1,34 @@
+# ============================================
+# IntelliJudge — Git Ignore
+# ============================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+*.egg
+
+# --- Environment ---
+.env
+!.env.example
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# --- Node (Frontend - Phase 6) ---
+node_modules/
+.next/
+out/
+
+# --- Misc ---
+*.log
+*.tmp

@@ -1,0 +1,49 @@
+# Vercel Ignore Build Step
+# Files listed here will not be included in the build
+# See: https://vercel.com/docs/concepts/projects/overview#ignored-build-step
+
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Environment files (these are in .gitignore anyway, but be explicit)
+.env
+.env.local
+.env.*.local
+
+# Development files
+.next
+node_modules
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backend files (this is a frontend-only build)
+backend/
+judge0-compose.yml
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Documentation files (don't affect build)
+*.md
+docs/
+.mdx
+
+# CI/CD files
+.github/
+.gitlab-ci.yml
+.circleci/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
