@@ -20,10 +20,9 @@ ENV PYTHONUNBUFFERED=1 \
 
 # ── System dependencies ─────────────────────────────────────
 # build-essential / gcc / g++  → compile Python C extensions
-# libsm6 / libxext6 / libxrender-dev → required by EasyOCR (OpenCV)
+# libsm6 / libxext6 / libxrender-dev → required by image libraries
 # libpq-dev                    → required by asyncpg / psycopg2 wheels
-# Note: OpenJDK removed — code execution uses the Piston API (external),
-#       so no local compiler is needed inside this container.
+# tesseract-ocr / libtesseract-dev → lightweight OCR (replaces heavy EasyOCR)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
@@ -32,6 +31,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxext6 \
     libxrender-dev \
     libpq-dev \
+    tesseract-ocr \
+    libtesseract-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Working directory ────────────────────────────────────────
@@ -45,9 +46,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # ── Health check ─────────────────────────────────────────────
-# Render's default port is 10000; start-period is long because
-# EasyOCR loads its model on first startup (~60 s).
-HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
+# Render's default port is 10000; start-period is reduced because
+# Tesseract loads quickly (unlike EasyOCR which took 60+ seconds).
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD python -c "import httpx; httpx.get('http://localhost:${PORT:-10000}/health', timeout=5).raise_for_status()" || exit 1
 
 # ── Expose port ──────────────────────────────────────────────

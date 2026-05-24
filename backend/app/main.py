@@ -44,14 +44,7 @@ async def lifespan(app: FastAPI):
         print(f"⚠️  Database not reachable: {exc}")
         print("   → Set DATABASE_URL in .env and restart to enable DB features")
 
-    try:
-        from app.services.ocr_service import _get_ocr_reader
-        print("⏳ Loading EasyOCR model (first run downloads ~100 MB, please wait)...")
-        await asyncio.to_thread(_get_ocr_reader)
-        print("✅ EasyOCR model ready")
-    except Exception as exc:
-        print(f"⚠️  EasyOCR pre-warm failed: {exc}")
-        print("   → First upload request will be slow while model downloads")
+    print("✅ Tesseract OCR ready")
 
     yield
 

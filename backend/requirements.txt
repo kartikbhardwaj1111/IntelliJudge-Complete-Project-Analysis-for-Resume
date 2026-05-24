@@ -24,10 +24,12 @@ python-jose[cryptography]==3.3.0     # JWT encode / decode
 
 # --- Phase 4: OCR Pipeline ---
 cloudinary==1.44.0         # Image CDN — upload screenshots, get CDN URLs
-easyocr==1.7.2             # OCR engine — extracts text from images (installs PyTorch)
-Pillow==11.2.1             # Image processing — open/convert images for EasyOCR
-httpx==0.28.1              # Async HTTP client (used here + Judge0 in Phase 8)
+pytesseract==0.3.10        # Lightweight OCR (uses system Tesseract binary)
+Pillow==11.2.1             # Image processing — open/convert images for OCR
+httpx==0.28.1              # Async HTTP client
 python-multipart==0.0.20   # Required by FastAPI to parse multipart/form-data file uploads
+# Google Cloud Vision (optional - uncomment if using)
+# google-cloud-vision==3.4.1
 
 # --- Phase 5: AI Reconstruction ---
 openai==1.65.5   # OpenAI-compatible API (works with Groq) — problem reconstruction & test case generation

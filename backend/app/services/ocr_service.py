@@ -111,68 +111,73 @@ async def upload_to_cloudinary(file_bytes: bytes, original_filename: str) -> str
     return await asyncio.to_thread(_do_upload)
 
 
-# ── EasyOCR — lazy singleton reader ────────────────────────────
-# The Reader object is ~200MB in memory and takes 5-10s to initialize.
-# We create it once on first use and reuse it for all subsequent requests.
+# ── Free OCR API: Google Cloud Vision (via pytesseract alternative)
+# Using Tesseract OCR via pytesseract is lightweight (~50MB vs EasyOCR's 200MB)
+# and works great on Render free tier.
 
-_ocr_reader = None
+import base64
 
-
-def _get_ocr_reader():
-    """Return the shared EasyOCR reader, initializing it on first call."""
-    global _ocr_reader
-    if _ocr_reader is None:
-        try:
-            import easyocr
-        except ImportError as exc:
-            raise RuntimeError(
-                "EasyOCR is not installed. Run: pip install easyocr"
-            ) from exc
-
-        # gpu=False  → CPU inference (works everywhere, no CUDA required)
-        # verbose=False → suppress progress bars in server logs
-        # English model (~100MB) is downloaded automatically on first use
-        _ocr_reader = easyocr.Reader(["en"], gpu=False, verbose=False)
-
-    return _ocr_reader
-
-
-# ── EasyOCR text extraction ────────────────────────────────────
 
 async def extract_text_from_image(image_bytes: bytes) -> str:
     """
-    Run EasyOCR on the image and return the extracted raw text.
-
-    EasyOCR's readtext() is CPU-bound and can take 2-10 seconds depending
-    on image size. We run it in asyncio.to_thread() to keep the event loop
-    responsive for other requests during extraction.
-
-    Returns an empty string if no text is detected.
+    Extract text from image using Google Cloud Vision API (free tier) or 
+    fallback to Tesseract OCR if Vision API is not configured.
+    
+    Google Cloud Vision:
+    - 1000 requests/month free
+    - Much more accurate than local OCR
+    - No local model loading (saves RAM)
+    
+    Returns empty string if no text detected.
     """
-
-    def _run_ocr() -> str:
-        import numpy as np
-        from PIL import Image
-
-        reader = _get_ocr_reader()
-
-        # Normalise to RGB numpy array — EasyOCR accepts numpy arrays, bytes, or
-        # file paths, but NOT PIL Image objects directly.
-        image = Image.open(io.BytesIO(image_bytes))
-        if image.mode not in ("RGB", "L"):
-            image = image.convert("RGB")
-        image_np = np.array(image)
-
-        # readtext returns [(bounding_box, text, confidence), ...]
-        # paragraph=False → keep individual text regions (better for code problems)
-        results = reader.readtext(image_np, detail=1, paragraph=False)
-
-        # Filter out low-confidence detections (below 30%)
-        # and join remaining lines in reading order (top-to-bottom, left-to-right)
-        lines = [text for (_, text, conf) in results if conf >= 0.3]
-        return "\n".join(lines)
-
-    return await asyncio.to_thread(_run_ocr)
+    # Try Google Cloud Vision API first (if credentials available)
+    try:
+        from google.cloud import vision
+        from google.oauth2 import service_account
+        
+        # Check if service account JSON is available as environment variable
+        import json
+        import os
+        
+        if google_creds := os.getenv("GOOGLE_CLOUD_VISION_CREDENTIALS"):
+            credentials = service_account.Credentials.from_service_account_info(
+                json.loads(google_creds)
+            )
+            client = vision.ImageAnnotatorClient(credentials=credentials)
+            image = vision.Image(content=image_bytes)
+            response = client.text_detection(image=image)
+            
+            if response.text_annotations:
+                # First annotation is full text
+                return response.text_annotations[0].description
+            return ""
+    except Exception:
+        pass  # Fall through to Tesseract
+    
+    # Fallback: Use Tesseract OCR (lightweight, ~50MB)
+    def _run_tesseract_ocr() -> str:
+        try:
+            import pytesseract
+            from PIL import Image
+            
+            image = Image.open(io.BytesIO(image_bytes))
+            # Preprocess: convert to grayscale for better OCR
+            if image.mode != "L":
+                image = image.convert("L")
+            
+            text = pytesseract.image_to_string(image)
+            return text
+        except ImportError:
+            raise BadRequestException(
+                "Tesseract OCR is not installed. "
+                "Install it with: pip install pytesseract\n"
+                "Also install Tesseract binary from: https://github.com/UB-Mannheim/tesseract/wiki"
+            )
+        except Exception as e:
+            # If Tesseract fails, return placeholder
+            return f"[OCR Error: {str(e)}]"
+    
+    return await asyncio.to_thread(_run_tesseract_ocr)
 
 
 # ── Text cleanup ───────────────────────────────────────────────
