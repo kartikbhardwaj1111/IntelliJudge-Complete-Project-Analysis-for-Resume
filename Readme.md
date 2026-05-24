@@ -1,25 +1,36 @@
 <div align="center">
 
-![IntelliJudge — AI-Powered Coding Question Recovery & Practice](assets/banner.png)
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366f1,50:8b5cf6,100:06b6d4&height=260&section=header&text=IntelliJudge&fontSize=88&animation=fadeIn&fontColor=ffffff&fontAlignY=42&desc=AI-Powered%20Coding%20Question%20Recovery%20%26%20Practice%20Platform&descAlignY=68&descSize=19" width="100%"/>
 
-# IntelliJudge
+<br/>
 
-### 🧠 AI-Powered Coding Question Recovery & Practice Platform
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&pause=1200&color=6366F1&background=FFFFFF00&center=true&vCenter=true&repeat=true&width=750&height=50&lines=📸+Upload+Screenshot+→+🤖+AI+Reconstructs+Problem;💻+Monaco+Editor+with+Live+Code+Execution;✨+AI+Hints+%26+Feedback+on+Wrong+Answers;📊+Analytics+Dashboard+for+Progress+Tracking;🚀+FastAPI+%2B+Next.js+16+%2B+PostgreSQL+%2B+Groq+AI)](https://github.com/kartikbhardwaj1111/IntelliJudge-Complete-Project-Analysis-for-Resume)
 
-[![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+<br/>
+
+[![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-886FBF?style=for-the-badge&logo=googlegemini&logoColor=fff)](https://ai.google.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 
-**Recover coding questions from screenshots. Reconstruct. Practice. Master.**
+<br/>
 
-*Built for students, interview candidates, and competitive programmers who want to revisit unsolved problems from exams, contests, and coding rounds.*
+![GitHub repo size](https://img.shields.io/github/repo-size/kartikbhardwaj1111/IntelliJudge-Complete-Project-Analysis-for-Resume?style=flat-square&color=6366f1&label=Repo%20Size)
+![GitHub last commit](https://img.shields.io/github/last-commit/kartikbhardwaj1111/IntelliJudge-Complete-Project-Analysis-for-Resume?style=flat-square&color=8b5cf6&label=Last%20Commit)
+![GitHub stars](https://img.shields.io/github/stars/kartikbhardwaj1111/IntelliJudge-Complete-Project-Analysis-for-Resume?style=flat-square&color=06b6d4&label=Stars)
+[![License: MIT](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](LICENSE)
 
-[Features](#-features) · [How It Works](#-how-it-works) · [Architecture](#-architecture) · [Getting Started](#-getting-started) · [API Reference](#-api-reference) · [Contributing](#-contributing)
+<br/>
+
+[🎯 Features](#-features) · [⚙️ How It Works](#%EF%B8%8F-how-it-works) · [🏗️ Architecture](#%EF%B8%8F-architecture) · [🚀 Getting Started](#-getting-started) · [📡 API Reference](#-api-reference) · [🚢 Deployment](#-deployment)
+
+<br/>
+
+> **Recover coding questions from screenshots. Reconstruct. Practice. Master.**
+>
+> *Built for students and competitive programmers who want to revisit unsolved problems from exams, contests, and coding rounds.*
 
 </div>
 
@@ -27,131 +38,158 @@
 
 ## 🎯 The Problem
 
-Every competitive programmer and interview candidate knows this pain:
+Every competitive programmer knows this frustration:
 
-> 💭 You encounter a challenging coding question during an online assessment or interview. Time runs out. Later, all you have is a **screenshot** — and there's no way to reconstruct the full problem, generate test cases, or set up a proper environment to practice.
+```
+You're in an online assessment or contest. Time runs out.
+Later, all you have is a screenshot of the problem.
+No way to reconstruct it. No test cases. No practice environment.
+```
 
 **IntelliJudge eliminates this problem entirely.**
 
-Upload a screenshot → Get a fully reconstructed problem → Code, compile, test, and get AI-driven feedback — all in one platform.
+```
+📸 Upload Screenshot  →  🔍 OCR Extraction  →  🤖 AI Reconstruction  →  💻 Code & Judge  →  📊 Analytics
+```
 
 ---
 
-## ✨ How It Works
+## ✨ Features
 
-![IntelliJudge Workflow](assets/workflow.png)
+<table>
+<tr>
+<td width="50%" valign="top">
 
-| Step | Action | What Happens |
+### 🧠 AI-Powered Core
+- **Screenshot → Problem** — Upload any exam screenshot and get a fully structured problem with title, constraints, examples, difficulty, and topic tags
+- **Smart OCR Pipeline** — EasyOCR extraction + AI-powered text cleanup handles messy layouts, rotated text, and multi-column screenshots
+- **Groq / Llama 3.3 Reconstruction** — Converts raw OCR output into clean structured JSON with auto-classification
+- **Auto Test Case Generation** — AI generates sample, hidden, edge, and stress test categories instantly
+
+</td>
+<td width="50%" valign="top">
+
+### 💻 Code Execution Engine
+- **Monaco Code Editor** — Full VS Code engine in-browser with IntelliSense and language-specific starter templates
+- **Piston API Sandbox** — Free, open sandboxed execution for C++, Java, Python, and JavaScript
+- **Competitive Verdict System** — AC / WA / TLE / MLE / RE / CE with per-test-case detail and diff view on WA
+- **AI Feedback on Wrong Answers** — Targeted hints and missed edge-case analysis without spoiling the solution
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### 🔐 Secure & Scalable
+- **JWT + bcrypt Auth** — Stateless token-based authentication with bcrypt password hashing (12 salt rounds)
+- **Fully Async** — FastAPI + SQLAlchemy async + asyncpg — zero blocking I/O from endpoint to database
+- **Cloud-Native Stack** — Cloudinary CDN for screenshots, Neon serverless PostgreSQL, Vercel + Railway deploy
+- **End-to-End Type Safety** — TypeScript strict mode on frontend, Pydantic validation on all backend endpoints
+
+</td>
+<td width="50%" valign="top">
+
+### 📊 Analytics & Insights
+- **Progress Dashboard** — Topic-wise accuracy, difficulty distribution, and language usage breakdown
+- **Submission Trends** — Time-series charts of your solving activity over 7 / 30 / 90 days
+- **Performance Metrics** — Success rate, total problems solved, average verdict per language
+- **Recharts Visualizations** — Interactive charts: bar, line, pie, and area graphs powered by Recharts
+
+</td>
+</tr>
+</table>
+
+---
+
+## ⚙️ How It Works
+
+```
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                         IntelliJudge — Full Pipeline                          ║
+╠════════════╦══════════════╦══════════════╦═════════════════╦══════════════════╣
+║  📸 Upload ║  🔍 Extract  ║ 🤖 Reconstruct║  💻 Code + Run  ║  📊 Track        ║
+╠════════════╬══════════════╬══════════════╬═════════════════╬══════════════════╣
+║ Drag-drop  ║  EasyOCR     ║ Groq / Llama ║  Monaco Editor  ║  Analytics       ║
+║ screenshot ║  extraction  ║ 3.3 70B →    ║  + Piston API   ║  Dashboard       ║
+║ to         ║  + AI text   ║ structured   ║  sandboxed      ║  with charts     ║
+║ Cloudinary ║  cleanup     ║ JSON problem ║  execution      ║  & trends        ║
+╚════════════╩══════════════╩══════════════╩═════════════════╩══════════════════╝
+```
+
+| Step | Action | Technology Used |
 |:---:|---|---|
-| **1** | 📸 **Upload Screenshot** | Drag-and-drop or upload a screenshot of any coding question |
-| **2** | 🔍 **OCR Extraction** | EasyOCR extracts raw text from the image with AI-powered cleanup |
-| **3** | 🤖 **AI Reconstruction** | Google Gemini reconstructs the full problem statement — title, constraints, examples, tags, difficulty |
-| **4** | 💻 **Code & Judge** | Write solutions in Monaco Editor, run against test cases via Judge0, get instant verdicts + AI feedback |
-
----
-
-## 🚀 Features
-
-### Core Platform
-
-| Feature | Description |
-|---|---|
-| **🖼️ Screenshot → Problem** | Upload a screenshot from any coding exam and get a fully structured problem with title, description, I/O format, constraints, and examples |
-| **🔍 Smart OCR Pipeline** | EasyOCR extraction with AI-powered text cleanup — handles messy exam screenshots, rotated text, and multi-column layouts |
-| **🤖 AI Reconstruction** | Google Gemini transforms raw OCR text into a structured JSON problem with difficulty classification and topic tagging |
-| **📝 Monaco Code Editor** | VS Code-powered editor with syntax highlighting, IntelliSense, and language-specific templates for C++, Java, Python, and JavaScript |
-| **⚡ Live Compilation** | Sandboxed code execution via Judge0 API with real-time status tracking (queued → processing → done) |
-| **🧪 Auto Test Cases** | AI-generated test cases including sample, hidden, edge, and stress categories |
-| **✅ Verdict System** | Full competitive programming verdict support — AC, WA, TLE, MLE, RE, CE — with test-case-level results |
-| **💡 AI Feedback** | Get intelligent feedback on wrong answers: what went wrong, missed edge cases, and hints toward the correct approach — without spoiling the solution |
-| **📊 Analytics Dashboard** | Track progress with topic-wise accuracy, difficulty distribution, streak tracking, and performance trends |
-
-### Platform Highlights
-
-| Feature | Description |
-|---|---|
-| **🔐 Secure Auth** | JWT-based stateless authentication with bcrypt password hashing |
-| **🌐 Full-Stack Monorepo** | Clean separation of Next.js frontend and FastAPI backend with shared types |
-| **☁️ Cloud-Native** | Cloudinary for image hosting, Neon for serverless PostgreSQL, Vercel + Railway for deployment |
-| **📱 Responsive Design** | Tailwind CSS v4 powered UI that works across desktop and tablet |
-| **🔄 Smart Retry Logic** | Exponential backoff on all API calls for reliability |
+| **1** | 📸 Upload a screenshot of any coding question | Drag-and-drop UI → Cloudinary CDN |
+| **2** | 🔍 Extract text from the image with OCR | EasyOCR + AI-powered text cleanup |
+| **3** | 🤖 Reconstruct the full problem with AI | Groq API — Llama 3.3 70B |
+| **4** | 💻 Write your solution in Monaco Editor | VS Code engine, 4 languages, code templates |
+| **5** | ⚡ Execute code against all test cases | Piston API — free sandboxed runner |
+| **6** | 💡 Get AI feedback if you get a wrong answer | Groq AI hints, edge-case analysis |
+| **7** | 📊 Track your progress over time | Recharts analytics dashboard |
 
 ---
 
 ## 🏗️ Architecture
 
-### System Overview
-
 ```mermaid
 graph TB
-    subgraph Frontend["🖥️ Frontend — Next.js 15"]
-        UI["Dashboard UI"]
+    subgraph Client["🖥️ Frontend — Next.js 16 + TypeScript"]
+        Landing["Landing Page"]
+        Dashboard["Dashboard"]
         Editor["Monaco Editor"]
-        Upload["Upload System"]
-        Analytics["Analytics View"]
+        Upload["Upload Flow (3-step)"]
+        Analytics["Analytics Dashboard"]
     end
 
-    subgraph Backend["⚙️ Backend — FastAPI"]
-        API["API Routes"]
-        Auth["Auth Service"]
-        OCR["OCR Service"]
-        AISvc["AI Service"]
-        CompSvc["Compiler Service"]
-        ValidSvc["Validation Service"]
+    subgraph API["⚙️ API Layer — FastAPI"]
+        AuthR["Auth Routes\n/api/auth"]
+        ProbR["Problem Routes\n/api/problems"]
+        SubR["Submission Routes\n/api/submissions"]
+        UploadR["Upload Routes\n/api/upload"]
+        AIR["AI Routes\n/api/ai"]
+        AnalR["Analytics Routes\n/api/analytics"]
+    end
+
+    subgraph Services["🔧 Service Layer (Business Logic)"]
+        AuthSvc["AuthService\nbcrypt + JWT"]
+        OCRSvc["OCRService\nEasyOCR"]
+        AISvc["AIService\nGroq/Llama"]
+        CompSvc["CompilerService\nPiston API"]
+        ValSvc["ValidationService\nVerdict Engine"]
+        AnasSvc["AnalyticsService\nStats + Trends"]
     end
 
     subgraph External["☁️ External Services"]
-        Gemini["Google Gemini API"]
-        Judge0["Judge0 API"]
-        Cloud["Cloudinary"]
+        Groq["Groq API\nLlama 3.3 70B"]
+        Piston["Piston API\nSandboxed Execution"]
+        Cloudinary["Cloudinary\nImage CDN"]
     end
 
-    subgraph Data["💾 Data Layer"]
-        PG[("PostgreSQL (Neon)")]
+    subgraph Data["💾 Data Layer — PostgreSQL (Neon)"]
+        Users[("users")]
+        Problems[("problems")]
+        TestCases[("test_cases")]
+        Submissions[("submissions")]
     end
 
-    UI --> API
-    Editor --> API
-    Upload --> API
-    Analytics --> API
+    Client -->|HTTP REST| API
+    AuthR --> AuthSvc
+    ProbR --> AISvc & OCRSvc
+    SubR --> CompSvc & ValSvc
+    UploadR --> OCRSvc
+    AIR --> AISvc
+    AnalR --> AnasSvc
 
-    API --> Auth
-    API --> OCR
-    API --> AISvc
-    API --> CompSvc
-    API --> ValidSvc
+    AISvc --> Groq
+    CompSvc --> Piston
+    OCRSvc --> Cloudinary
 
-    AISvc --> Gemini
-    CompSvc --> Judge0
-    Upload --> Cloud
-    
-    Auth --> PG
-    OCR --> PG
-    AISvc --> PG
-    CompSvc --> PG
-    ValidSvc --> PG
+    AuthSvc --> Users
+    AISvc --> Problems & TestCases
+    ValSvc --> Submissions
+    AnasSvc --> Submissions & Problems
 ```
 
-### Data Flow Pipeline
-
-```
-┌──────────────┐     ┌──────────────┐     ┌─────────────────┐     ┌──────────────────┐
-│  Screenshot  │────▶│  Cloudinary  │────▶│  EasyOCR        │────▶│  Cleaned Text    │
-│  Upload      │     │  Storage     │     │  Extraction     │     │  Output          │
-└──────────────┘     └──────────────┘     └─────────────────┘     └────────┬─────────┘
-                                                                           │
-┌──────────────┐     ┌──────────────┐     ┌─────────────────┐             │
-│  Analytics   │◀────│  Verdict +   │◀────│  Judge0         │             │
-│  Dashboard   │     │  AI Feedback │     │  Execution      │             │
-└──────────────┘     └──────────────┘     └────────┬────────┘             │
-                                                    │                      │
-                     ┌──────────────┐     ┌────────▼────────┐    ┌───────▼──────────┐
-                     │  Test Case   │◀────│  Structured     │◀───│  Gemini AI       │
-                     │  Generation  │     │  Problem        │    │  Reconstruction  │
-                     └──────────────┘     └─────────────────┘    └──────────────────┘
-```
-
-### Database Entity Relationship
+### Database Schema
 
 ```mermaid
 erDiagram
@@ -180,7 +218,6 @@ erDiagram
         jsonb examples
         string difficulty
         jsonb tags
-        text ocr_text
         string screenshot_url
         timestamp created_at
     }
@@ -215,83 +252,145 @@ erDiagram
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| **Frontend** | [Next.js 15](https://nextjs.org/) + TypeScript | SSR, app router, UI components |
-| **Styling** | [Tailwind CSS v4](https://tailwindcss.com/) | Utility-first responsive design |
-| **Code Editor** | [Monaco Editor](https://microsoft.github.io/monaco-editor/) | VS Code-like in-browser editing |
-| **State Management** | [Zustand](https://github.com/pmndrs/zustand) | Lightweight global state |
-| **Backend** | [FastAPI](https://fastapi.tiangolo.com/) + Python | Async REST API & business logic |
-| **ORM** | [SQLAlchemy](https://www.sqlalchemy.org/) + Alembic | Async ORM + database migrations |
-| **Database** | [PostgreSQL](https://www.postgresql.org/) (Neon) | Serverless relational datastore |
-| **OCR Engine** | [EasyOCR](https://github.com/JaidedAI/EasyOCR) | Screenshot text extraction |
-| **AI Engine** | [Google Gemini](https://ai.google.dev/) | Problem reconstruction, hints, feedback |
-| **Compiler** | [Judge0 API](https://judge0.com/) | Sandboxed code execution & judging |
-| **Image Storage** | [Cloudinary](https://cloudinary.com/) | CDN-backed screenshot hosting |
-| **Auth** | JWT + bcrypt | Stateless token-based authentication |
+<div align="center">
+
+**Frontend**
+
+<img src="https://skillicons.dev/icons?i=nextjs,ts,tailwind,react&theme=dark" />
+
+**Backend & Database**
+
+<img src="https://skillicons.dev/icons?i=python,fastapi,postgresql,docker&theme=dark" />
+
+**Cloud & DevOps**
+
+<img src="https://skillicons.dev/icons?i=vercel,github,vscode,linux&theme=dark" />
+
+</div>
+
+<br/>
+
+| Layer | Technology | Version | Purpose |
+|---|---|:---:|---|
+| **Frontend Framework** | Next.js | 16 | SSR, App Router, file-based routing |
+| **Language (Frontend)** | TypeScript | 5.x | Full type safety across the codebase |
+| **Styling** | Tailwind CSS | v4 | Utility-first responsive UI design |
+| **Code Editor** | Monaco Editor | 4.7 | VS Code engine — syntax highlighting + IntelliSense |
+| **Charts** | Recharts | 3.x | Analytics data visualization |
+| **State Management** | Zustand | 5.x | Lightweight global auth + app state |
+| **Backend Framework** | FastAPI | 0.115 | Async REST API with auto-generated Swagger docs |
+| **Language (Backend)** | Python | 3.11+ | All backend services and AI integrations |
+| **ORM** | SQLAlchemy | 2.0 | Async ORM with full type support |
+| **Migrations** | Alembic | 1.15 | Version-controlled database schema changes |
+| **Database** | PostgreSQL (Neon) | 15+ | Serverless relational datastore with JSONB |
+| **OCR Engine** | EasyOCR | 1.7 | Screenshot text extraction (no API key needed) |
+| **AI Engine** | Groq / Llama 3.3 | 70B | Problem reconstruction, hints, feedback |
+| **Code Execution** | Piston API | v2 | Free, open sandboxed multi-language runner |
+| **Image Storage** | Cloudinary | — | CDN-backed screenshot hosting + auto-optimize |
+| **Authentication** | JWT + bcrypt | — | Stateless token auth with secure password hashing |
+| **Deployment** | Vercel + Railway | — | Frontend on Vercel, backend on Railway (Docker) |
+
+---
+
+## ⚡ Verdict System
+
+<div align="center">
+
+| Verdict | Symbol | Description | Priority |
+|:---:|:---:|---|:---:|
+| **Accepted** | `✅ AC` | All test cases passed | 6 (lowest) |
+| **Wrong Answer** | `❌ WA` | Output differs from expected | 5 |
+| **Time Limit Exceeded** | `⏱️ TLE` | Execution exceeded time limit | 4 |
+| **Memory Limit Exceeded** | `💾 MLE` | Memory usage exceeded limit | 3 |
+| **Runtime Error** | `💥 RE` | Crash, segfault, or unhandled exception | 2 |
+| **Compilation Error** | `🔧 CE` | Code failed to compile | 1 (highest) |
+
+**Overall Verdict Priority:** `CE` › `RE` › `TLE` › `MLE` › `WA` › `AC`
+
+*On Compilation Error, remaining test cases are skipped immediately.*
+
+</div>
+
+---
+
+## 🌐 Supported Languages
+
+<div align="center">
+
+<img src="https://skillicons.dev/icons?i=cpp,java,python,js&theme=dark" />
+
+| Language | Runtime | Starter Template |
+|---|---|:---:|
+| C++ | C++17 | ✅ |
+| Java | Java 17 | ✅ |
+| Python | Python 3.x | ✅ |
+| JavaScript | Node.js | ✅ |
+
+</div>
 
 ---
 
 ## 📁 Project Structure
 
 ```
-intellijudge/
-├── frontend/                        # Next.js 15 application
+IntelliJudge/
+│
+├── 📂 frontend/                         # Next.js 16 application
 │   ├── src/
-│   │   ├── app/                     # App router pages
-│   │   │   ├── (auth)/              #   ├── Login & Register
-│   │   │   ├── dashboard/           #   ├── Main dashboard
-│   │   │   ├── problem/[id]/        #   ├── Problem view + editor
-│   │   │   ├── upload/              #   ├── Screenshot upload
-│   │   │   ├── analytics/           #   └── Analytics dashboard
-│   │   │   ├── layout.tsx
-│   │   │   └── page.tsx             # Landing page
-│   │   ├── components/
-│   │   │   ├── ui/                  # Reusable UI primitives
-│   │   │   ├── editor/              # Monaco editor wrapper
-│   │   │   ├── upload/              # Drag-and-drop upload
-│   │   │   ├── problem/             # Problem display cards
-│   │   │   ├── dashboard/           # Dashboard widgets
-│   │   │   └── layout/              # Nav, sidebar, footer
-│   │   ├── lib/                     # API client, auth, helpers
-│   │   ├── hooks/                   # Custom React hooks
-│   │   ├── types/                   # Shared TypeScript types
-│   │   └── stores/                  # Zustand state stores
-│   ├── tailwind.config.ts
-│   ├── tsconfig.json
+│   │   ├── 📂 app/                      # App Router pages
+│   │   │   ├── (auth)/login/            # ├── Login page
+│   │   │   ├── (auth)/register/         # ├── Register page
+│   │   │   ├── dashboard/               # ├── Problem feed with filters
+│   │   │   ├── problem/[id]/            # ├── Problem detail + Monaco editor
+│   │   │   ├── upload/                  # ├── 3-step screenshot upload flow
+│   │   │   └── analytics/              # └── Progress charts dashboard
+│   │   ├── 📂 components/
+│   │   │   ├── editor/                  # Monaco editor + I/O output panel
+│   │   │   ├── upload/                  # Drag-and-drop DropZone
+│   │   │   ├── problem/                 # ProblemCard, TestCaseList, SubmissionResult
+│   │   │   ├── ai/                      # HintPanel, FeedbackPanel, EdgeCasePanel
+│   │   │   ├── analytics/               # StatsCard, DifficultyChart, TrendChart
+│   │   │   └── layout/                  # Navbar
+│   │   ├── 📂 lib/                      # API client (fetch wrapper) + code templates
+│   │   ├── 📂 stores/                   # Zustand auth store with cookie sync
+│   │   └── 📂 types/                    # Shared TypeScript interfaces
+│   ├── next.config.ts                   # Image remotePatterns, security headers
+│   ├── vercel.json                      # Vercel deployment configuration
 │   └── package.json
 │
-├── backend/                         # FastAPI application
+├── 📂 backend/                          # FastAPI application
 │   ├── app/
-│   │   ├── main.py                  # FastAPI entry point
-│   │   ├── config.py                # Env vars & settings
-│   │   ├── database.py              # Async DB connection
-│   │   ├── models/                  # SQLAlchemy ORM models
-│   │   │   ├── user.py
-│   │   │   ├── problem.py
-│   │   │   ├── submission.py
-│   │   │   └── test_case.py
-│   │   ├── schemas/                 # Pydantic request/response schemas
-│   │   ├── routes/                  # API route handlers
-│   │   │   ├── auth.py              #   ├── Register, Login, Profile
-│   │   │   ├── problems.py          #   ├── CRUD + AI reconstruct
-│   │   │   ├── submissions.py       #   ├── Run & submit code
-│   │   │   ├── upload.py            #   ├── Screenshot upload + OCR
-│   │   │   └── analytics.py         #   └── Stats & trends
-│   │   ├── services/                # Business logic layer
-│   │   │   ├── auth_service.py
-│   │   │   ├── ocr_service.py
-│   │   │   ├── ai_service.py
-│   │   │   ├── compiler_service.py
-│   │   │   ├── validation_service.py
-│   │   │   └── analytics_service.py
-│   │   ├── utils/                   # JWT, hashing, exceptions
-│   │   └── migrations/              # Alembic DB migrations
+│   │   ├── main.py                      # App entry point, CORS, exception handlers, lifespan
+│   │   ├── config.py                    # Pydantic Settings — loads all env vars
+│   │   ├── database.py                  # Async SQLAlchemy engine + session factory
+│   │   ├── 📂 models/                   # SQLAlchemy ORM table definitions
+│   │   │   ├── user.py                  # User model with relationships
+│   │   │   ├── problem.py               # Problem model (JSONB fields)
+│   │   │   ├── test_case.py             # TestCase model with category enum
+│   │   │   └── submission.py            # Submission with JSONB results
+│   │   ├── 📂 schemas/                  # Pydantic request / response models
+│   │   ├── 📂 routes/                   # API route handlers
+│   │   │   ├── auth.py                  # Register, Login, /me
+│   │   │   ├── problems.py              # CRUD + AI reconstruct + test case gen
+│   │   │   ├── submissions.py           # Run (no-DB) + Submit (full judge)
+│   │   │   ├── upload.py                # Screenshot upload → OCR
+│   │   │   ├── ai.py                    # Hints, feedback, edge cases, optimize
+│   │   │   └── analytics.py            # Overview, topics, trends, history
+│   │   ├── 📂 services/                 # Pure business logic (no HTTP concerns)
+│   │   │   ├── auth_service.py          # bcrypt hash + JWT sign/verify
+│   │   │   ├── ocr_service.py           # EasyOCR reader (cached singleton)
+│   │   │   ├── ai_service.py            # Groq client — reconstruct + test-gen
+│   │   │   ├── compiler_service.py      # Piston API wrapper + base64 codec
+│   │   │   ├── validation_service.py    # Verdict computation + output diff
+│   │   │   └── analytics_service.py     # Stats aggregation queries
+│   │   ├── 📂 utils/                    # JWT helpers, bcrypt, exceptions, rate limiter
+│   │   └── 📂 migrations/              # Alembic version history
 │   ├── requirements.txt
-│   └── Dockerfile
+│   ├── Dockerfile                       # Multi-stage Railway deploy image
+│   └── .env.example
 │
-├── docker-compose.yml               # Local dev orchestration
-├── .gitignore
+├── railway.json                         # Railway backend service configuration
+├── judge0-compose.yml                   # Optional local Judge0 Docker setup
 └── README.md
 ```
 
@@ -301,46 +400,49 @@ intellijudge/
 
 ### Prerequisites
 
-| Requirement | Version | Link |
+| Requirement | Version | Get It |
 |---|---|---|
 | Node.js | ≥ 18.x | [nodejs.org](https://nodejs.org/) |
 | Python | ≥ 3.11 | [python.org](https://www.python.org/) |
-| PostgreSQL | ≥ 15 | [postgresql.org](https://www.postgresql.org/) or [Neon](https://neon.tech/) |
-| Gemini API Key | Free | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
-| Judge0 API Key | Free tier | [judge0.com](https://judge0.com/) or [RapidAPI](https://rapidapi.com/judge0-official/api/judge0-ce) |
+| PostgreSQL | ≥ 15 | Local or free at [neon.tech](https://neon.tech/) |
+| Groq API Key | Free | [console.groq.com](https://console.groq.com/) |
 | Cloudinary Account | Free | [cloudinary.com](https://cloudinary.com/) |
 
-### 1. Clone the Repository
+### 1 · Clone
 
 ```bash
-git clone https://github.com/kartikbhardwaj/intellijudge.git
-cd intellijudge
+git clone https://github.com/kartikbhardwaj1111/IntelliJudge-Complete-Project-Analysis-for-Resume.git
+cd IntelliJudge-Complete-Project-Analysis-for-Resume
 ```
 
-### 2. Backend Setup
+### 2 · Backend Setup
 
 ```bash
 cd backend
 
-# Create virtual environment
+# Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate  # macOS/Linux
+source venv/bin/activate          # macOS / Linux
+# venv\Scripts\activate           # Windows
 
-# Install dependencies
+# Install all dependencies
 pip install -r requirements.txt
 
-# Configure environment
+# Configure environment variables
 cp .env.example .env
-# Edit .env with your credentials (see below)
+# Open .env and fill in your credentials (see section below)
 
 # Run database migrations
 alembic upgrade head
 
-# Start the server
+# Start the development server
 uvicorn app.main:app --reload --port 8000
 ```
 
-### 3. Frontend Setup
+> **Backend running at:** `http://localhost:8000`
+> **Swagger API docs at:** `http://localhost:8000/docs`
+
+### 3 · Frontend Setup
 
 ```bash
 cd frontend
@@ -348,199 +450,271 @@ cd frontend
 # Install dependencies
 npm install
 
-# Start dev server
+# Configure environment variables
+cp .env.example .env.local
+# Set: NEXT_PUBLIC_API_URL=http://localhost:8000/api
+
+# Start the development server
 npm run dev
 ```
 
-### 4. Environment Variables
+> **Frontend running at:** `http://localhost:3000`
 
-Create a `.env` file in the `backend/` directory:
+### 4 · Environment Variables
+
+<details>
+<summary><b>📄 backend/.env — click to expand</b></summary>
 
 ```env
-# Database
+# Application
+APP_NAME=IntelliJudge
+APP_VERSION=0.1.0
+DEBUG=True
+
+# Server
+HOST=0.0.0.0
+PORT=8000
+
+# CORS (add your frontend URL)
+CORS_ORIGINS=["http://localhost:3000"]
+
+# Database — get from Neon or use local PostgreSQL
+# Select the "asyncpg" driver in Neon connection details
 DATABASE_URL=postgresql+asyncpg://user:password@host/intellijudge
 
-# Authentication
-JWT_SECRET=your-super-secret-key-here
+# Auth — generate with: python -c "import secrets; print(secrets.token_hex(32))"
+JWT_SECRET=your-super-secret-key-at-least-32-chars
+JWT_ALGORITHM=HS256
+JWT_EXPIRY_HOURS=24
 
-# Google Gemini AI
-GEMINI_API_KEY=your-gemini-api-key
+# Groq AI (free at console.groq.com)
+GROQ_API_KEY=gsk_...
+GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_BASE_URL=https://api.groq.com/openai/v1
 
-# Judge0 Compiler API
-JUDGE0_API_KEY=your-judge0-api-key
-JUDGE0_API_URL=https://judge0-ce.p.rapidapi.com
-
-# Cloudinary Image Storage
+# Cloudinary (free at cloudinary.com → Dashboard)
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 ```
 
-Create a `.env.local` file in the `frontend/` directory:
+</details>
+
+<details>
+<summary><b>📄 frontend/.env.local — click to expand</b></summary>
 
 ```env
+# URL of your running FastAPI backend
 NEXT_PUBLIC_API_URL=http://localhost:8000/api
 ```
 
-### 5. Run with Docker (Alternative)
-
-```bash
-docker-compose up --build
-```
-
-> **Frontend**: http://localhost:3000  
-> **Backend**: http://localhost:8000  
-> **API Docs**: http://localhost:8000/docs
+</details>
 
 ---
 
 ## 📡 API Reference
 
-### Authentication
+<details>
+<summary><b>🔐 Authentication</b></summary>
 
 | Method | Endpoint | Description | Auth |
 |:---:|---|---|:---:|
 | `POST` | `/api/auth/register` | Register new user | ❌ |
-| `POST` | `/api/auth/login` | Login, returns JWT | ❌ |
+| `POST` | `/api/auth/login` | Login — returns JWT token | ❌ |
 | `GET` | `/api/auth/me` | Get current user profile | ✅ |
 
-### Screenshot Upload & OCR
+</details>
+
+<details>
+<summary><b>📸 Upload & OCR</b></summary>
 
 | Method | Endpoint | Description | Auth |
 |:---:|---|---|:---:|
-| `POST` | `/api/upload/screenshot` | Upload screenshot, run OCR | ✅ |
-| `GET` | `/api/upload/{id}/ocr-result` | Get OCR extraction result | ✅ |
+| `POST` | `/api/upload/screenshot` | Upload screenshot → Cloudinary → EasyOCR | ✅ |
 
-### Problems
+</details>
+
+<details>
+<summary><b>📝 Problems</b></summary>
 
 | Method | Endpoint | Description | Auth |
 |:---:|---|---|:---:|
-| `POST` | `/api/problems/reconstruct` | AI-reconstruct from OCR text | ✅ |
-| `GET` | `/api/problems` | List user's problems | ✅ |
-| `GET` | `/api/problems/{id}` | Get problem details | ✅ |
-| `PUT` | `/api/problems/{id}` | Edit problem | ✅ |
+| `POST` | `/api/problems/reconstruct` | AI-reconstruct problem from OCR text | ✅ |
+| `GET` | `/api/problems` | List problems (paginated, filter by difficulty/tag/search) | ✅ |
+| `GET` | `/api/problems/{id}` | Get full problem with test cases | ✅ |
+| `PUT` | `/api/problems/{id}` | Edit problem fields | ✅ |
 | `DELETE` | `/api/problems/{id}` | Delete problem | ✅ |
-
-### Code Execution
-
-| Method | Endpoint | Description | Auth |
-|:---:|---|---|:---:|
-| `POST` | `/api/submissions/run` | Run code with custom input | ✅ |
-| `POST` | `/api/submissions/submit` | Submit for full judging | ✅ |
-| `GET` | `/api/submissions/{id}` | Get submission result | ✅ |
-
-### Test Cases
-
-| Method | Endpoint | Description | Auth |
-|:---:|---|---|:---:|
 | `POST` | `/api/problems/{id}/generate-tests` | AI-generate test cases | ✅ |
 | `GET` | `/api/problems/{id}/test-cases` | List test cases | ✅ |
 | `POST` | `/api/problems/{id}/test-cases` | Add custom test case | ✅ |
+| `DELETE` | `/api/problems/{id}/test-cases/{tc_id}` | Delete test case | ✅ |
 
-### AI Features
+</details>
 
-| Method | Endpoint | Description | Auth |
-|:---:|---|---|:---:|
-| `POST` | `/api/ai/feedback` | AI feedback on wrong answer | ✅ |
-| `POST` | `/api/ai/hints` | Progressive hints | ✅ |
-| `POST` | `/api/ai/edge-cases` | Edge case analysis | ✅ |
-| `POST` | `/api/ai/optimize` | Optimization suggestions | ✅ |
-
-### Analytics
+<details>
+<summary><b>⚡ Code Execution</b></summary>
 
 | Method | Endpoint | Description | Auth |
 |:---:|---|---|:---:|
-| `GET` | `/api/analytics/overview` | Dashboard summary stats | ✅ |
-| `GET` | `/api/analytics/topics` | Topic-wise breakdown | ✅ |
+| `POST` | `/api/submissions/run` | Run code with custom stdin (no DB write) | ✅ |
+| `POST` | `/api/submissions/submit` | Submit — judge all test cases + store result | ✅ |
+| `GET` | `/api/submissions/{id}` | Get full submission result with per-case verdicts | ✅ |
+
+</details>
+
+<details>
+<summary><b>💡 AI Features</b></summary>
+
+| Method | Endpoint | Description | Auth |
+|:---:|---|---|:---:|
+| `POST` | `/api/ai/feedback` | AI feedback on wrong answer submission | ✅ |
+| `POST` | `/api/ai/hints` | Progressive hints (level 1 → 3) | ✅ |
+| `POST` | `/api/ai/edge-cases` | Edge case analysis for a problem | ✅ |
+| `POST` | `/api/ai/optimize` | Complexity optimization suggestions | ✅ |
+
+</details>
+
+<details>
+<summary><b>📊 Analytics</b></summary>
+
+| Method | Endpoint | Description | Auth |
+|:---:|---|---|:---:|
+| `GET` | `/api/analytics/overview` | Summary stats — total, accepted, rate, streak | ✅ |
+| `GET` | `/api/analytics/topics` | Topic-wise accuracy breakdown | ✅ |
 | `GET` | `/api/analytics/submissions` | Paginated submission history | ✅ |
-| `GET` | `/api/analytics/trends` | Performance over time | ✅ |
+| `GET` | `/api/analytics/trends` | Daily submission counts over time | ✅ |
 
----
-
-## ⚖️ Verdict System
-
-IntelliJudge uses a competitive programming-style verdict system:
-
-| Verdict | Code | Description |
-|---|:---:|---|
-| ✅ **Accepted** | `AC` | Output matches expected for all test cases |
-| ❌ **Wrong Answer** | `WA` | Output differs from expected |
-| ⏱️ **Time Limit Exceeded** | `TLE` | Execution exceeded time limit |
-| 💾 **Memory Limit Exceeded** | `MLE` | Execution exceeded memory limit |
-| 💥 **Runtime Error** | `RE` | Crash, segfault, or unhandled exception |
-| 🔧 **Compilation Error** | `CE` | Code failed to compile |
-
-**Priority**: `CE > RE > TLE > MLE > WA > AC`
-
----
-
-## 🌐 Supported Languages
-
-| Language | Version | Judge0 ID |
-|---|---|:---:|
-| C++ | C++17 | 54 |
-| Java | Java 17 | 62 |
-| Python | Python 3 | 71 |
-| JavaScript | Node.js | 63 |
+</details>
 
 ---
 
 ## 🚢 Deployment
 
-| Service | Platform | Notes |
-|---|---|---|
-| **Frontend** | [Vercel](https://vercel.com/) | Auto-deploy from `main` branch |
-| **Backend** | [Railway](https://railway.app/) | Docker container deployment |
-| **Database** | [Neon](https://neon.tech/) | Serverless PostgreSQL, auto-scaling |
-| **Images** | [Cloudinary](https://cloudinary.com/) | CDN-backed image storage |
+<div align="center">
+
+| Service | Platform | Config | Auto-Deploy |
+|---|---|---|:---:|
+| **Frontend** | [Vercel](https://vercel.com/) | `frontend/vercel.json` | ✅ from `main` |
+| **Backend** | [Railway](https://railway.app/) | `railway.json` + `Dockerfile` | ✅ from `main` |
+| **Database** | [Neon](https://neon.tech/) | Env var `DATABASE_URL` | — |
+| **Images** | [Cloudinary](https://cloudinary.com/) | Env vars | — |
+
+</div>
+
+### Step-by-step
+
+**① Database — Neon (free)**
+```
+neon.tech → New Project → Connection Details → select "asyncpg" driver → copy URL
+```
+
+**② Backend — Railway**
+```
+railway.app → New Project → Deploy from GitHub →
+  Root Directory: backend
+  + Add env variables from backend/.env.example
+  + Set CORS_ORIGINS to your Vercel URL
+Railway auto-detects the Dockerfile and builds
+```
+
+**③ Frontend — Vercel**
+```
+vercel.com → Import from GitHub →
+  Root Directory: frontend
+  + Add: NEXT_PUBLIC_API_URL = https://your-backend.railway.app/api
+Deploy → get your live URL
+```
+
+**④ Run migrations**
+```bash
+# In Railway → your backend service → New Job:
+alembic upgrade head
+```
 
 ---
 
 ## 🗺️ Roadmap
 
-| Phase | Status | Description |
-|---|:---:|---|
-| **Phase 0** — Foundation | 🔴 | Auth, project scaffold, database |
-| **Phase 1** — OCR Pipeline | 🔴 | Screenshot upload → text extraction |
-| **Phase 2** — AI Reconstruction | 🔴 | OCR text → structured problem |
-| **Phase 3** — Compiler Engine | 🟡 | Monaco editor + Judge0 execution |
-| **Phase 4** — Test Case System | 🟡 | AI-generated test cases + validation |
-| **Phase 5** — AI Features | 🟢 | Feedback, hints, edge case analysis |
-| **Phase 6** — Analytics | 🟢 | Dashboard, progress tracking, trends |
-
-> 🔴 = MVP &nbsp; 🟡 = P1 &nbsp; 🟢 = P2
+<table>
+<tr>
+<th align="center">Phase</th>
+<th>Feature</th>
+<th align="center">Status</th>
+</tr>
+<tr>
+<td align="center"><b>Phase 0</b></td>
+<td>Project scaffold, auth system, database schema</td>
+<td align="center">✅ Complete</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 1</b></td>
+<td>Screenshot upload → Cloudinary → EasyOCR text extraction</td>
+<td align="center">✅ Complete</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 2</b></td>
+<td>Groq / Llama AI problem reconstruction + test case generation</td>
+<td align="center">✅ Complete</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 3</b></td>
+<td>Monaco Editor integration + Piston API code execution</td>
+<td align="center">✅ Complete</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 4</b></td>
+<td>Verdict system (AC/WA/TLE/MLE/RE/CE) + per-test-case results</td>
+<td align="center">✅ Complete</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 5</b></td>
+<td>AI feedback, progressive hints, edge-case analysis</td>
+<td align="center">✅ Complete</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 6</b></td>
+<td>Analytics dashboard — charts, trends, performance metrics</td>
+<td align="center">✅ Complete</td>
+</tr>
+<tr>
+<td align="center"><b>Phase 7</b></td>
+<td>Real-time collaboration, leaderboard, mobile app</td>
+<td align="center">🔜 Planned</td>
+</tr>
+</table>
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how to get started:
-
 1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Commit** your changes: `git commit -m 'Add amazing feature'`
+4. **Push** to the branch: `git push origin feature/amazing-feature`
 5. **Open** a Pull Request
 
-### Development Guidelines
-
-- **Frontend**: Follow Next.js App Router conventions, use TypeScript strict mode
-- **Backend**: Follow FastAPI best practices, use async/await, type all endpoints with Pydantic
-- **Database**: Create Alembic migrations for all schema changes
-- **Testing**: Write tests for all new service-layer functions
-
----
-
-## 📜 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+**Guidelines:**
+- **Backend** — Async/await throughout, type-hint all functions, follow service-layer pattern
+- **Frontend** — TypeScript strict mode, no `any`, small reusable components
+- **Database** — Always create an Alembic migration for schema changes
 
 ---
 
 <div align="center">
 
-**Built with ❤️ by [Kartik Bhardwaj](https://github.com/kartikbhardwaj)**
+### 🧑‍💻 Built by
 
-*If IntelliJudge helped you crack a problem, consider giving it a ⭐!*
+**[Kartik Bhardwaj](https://github.com/kartikbhardwaj1111)**
+
+*Full-stack platform demonstrating end-to-end engineering:*
+*AI/OCR integration · Async APIs · Monaco Editor · Sandboxed code execution · Cloud deployment*
+
+<br/>
+
+*If IntelliJudge helped you crack a problem, consider giving it a ⭐*
+
+<br/>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366f1,50:8b5cf6,100:06b6d4&height=120&section=footer" width="100%"/>
 
 </div>
