@@ -1,508 +1,414 @@
 # 🚀 IntelliJudge — Complete Deployment Guide
 
-**Status**: Production-ready deployment guide for Vercel + Railway + Neon
+**Stack**: Vercel (frontend) · Render (backend) · Neon (database) — **100% Free**
 
 ---
 
-## 📋 Deployment Overview
-
-This guide covers deploying IntelliJudge to production using:
-
-- **Frontend**: Vercel (Next.js hosting)
-- **Backend API**: Railway (Python/FastAPI hosting)
-- **Database**: Neon (serverless PostgreSQL)
-- **Image Storage**: Cloudinary (CDN)
+## 📋 Overview
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  User Browser                                       │
-│  https://intellijudge.vercel.app                    │
-└──────────────────┬──────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  User Browser                                           │
+│  https://your-app.vercel.app                           │
+└──────────────────┬──────────────────────────────────────┘
                    │ HTTPS
-┌──────────────────▼──────────────────────────────────┐
-│  Vercel (Next.js Frontend)                          │
-│  • Static HTML/CSS/JS                               │
-│  • API calls to backend                             │
-│  • Authentication state (Zustand)                   │
-└──────────────────┬──────────────────────────────────┘
-                   │ HTTPS + JWT Token
-┌──────────────────▼──────────────────────────────────┐
-│  Railway (FastAPI Backend)                          │
-│  • REST API endpoints                               │
-│  • Business logic & services                        │
-│  • Database queries (SQLAlchemy ORM)                │
-└──────────────────┬──────────────────────────────────┘
-                   │ SQL (asyncpg)
-┌──────────────────▼──────────────────────────────────┐
-│  Neon PostgreSQL                                    │
-│  • Users table                                      │
-│  • Problems table                                   │
-│  • Submissions table                                │
-│  • Test cases table                                 │
-└─────────────────────────────────────────────────────┘
+┌──────────────────▼──────────────────────────────────────┐
+│  Vercel  (Next.js 16 — Frontend)                        │
+│  • Serves the React UI                                  │
+│  • Calls backend API with JWT token                     │
+└──────────────────┬──────────────────────────────────────┘
+                   │ HTTPS + Authorization: Bearer <token>
+┌──────────────────▼──────────────────────────────────────┐
+│  Render  (FastAPI — Backend)                            │
+│  • REST API routes                                      │
+│  • AI reconstruction (Groq), OCR (EasyOCR)              │
+│  • Code execution (Piston API)                          │
+└──────────────────┬──────────────────────────────────────┘
+                   │ asyncpg (TLS)
+┌──────────────────▼──────────────────────────────────────┐
+│  Neon PostgreSQL  (Database)                            │
+│  • users / problems / test_cases / submissions          │
+└─────────────────────────────────────────────────────────┘
 
-     External APIs (all async):
-     • Groq API (LLM)
-     • Cloudinary (Image CDN)
-     • EasyOCR (text extraction)
+     External APIs (called by backend):
+     • Groq API   — AI problem reconstruction & hints
+     • Cloudinary — Screenshot image CDN
+     • Piston API — Free sandboxed code execution
+```
+
+> **⚠️ Render Free Tier Note**
+> Free web services on Render **spin down after 15 minutes of inactivity**.
+> The first request after sleep triggers a cold start (~30–60 seconds).
+> This is normal and expected on the free tier.
+
+---
+
+## 🧰 Accounts You Need (all free)
+
+| Service | Purpose | Sign-up |
+|---|---|---|
+| **GitHub** | Host your code | github.com |
+| **Vercel** | Frontend hosting | vercel.com |
+| **Render** | Backend hosting | render.com |
+| **Neon** | PostgreSQL database | neon.tech |
+| **Cloudinary** | Screenshot image storage | cloudinary.com |
+| **Groq** | Free AI API | console.groq.com |
+
+---
+
+## Step 1 — Set Up Neon PostgreSQL Database
+
+### 1.1 Create the database
+
+1. Go to **[neon.tech](https://neon.tech)** → Sign up with GitHub
+2. Click **"New Project"**
+   - Project name: `intellijudge`
+   - Database name: `intellijudge`
+   - Region: pick the one closest to you
+3. Click **"Create Project"**
+
+### 1.2 Copy the connection string
+
+1. In your Neon project → **"Connection Details"**
+2. In the dropdown, select **"asyncpg"** (not the default psycopg2)
+3. Copy the full URL — it looks like:
+   ```
+   postgresql+asyncpg://user:password@ep-cool-name.us-east-1.neon.tech/intellijudge?sslmode=require
+   ```
+4. **Save it** — you will paste it into Render as `DATABASE_URL`
+
+---
+
+## Step 2 — Deploy Backend to Render
+
+### 2.1 Create a Render account
+
+Go to **[render.com](https://render.com)** → **"Get Started for Free"** → sign in with GitHub.
+
+### 2.2 Create a new Web Service
+
+1. In Render dashboard → click **"New +"** → **"Web Service"**
+2. Select **"Build and deploy from a Git repository"**
+3. Connect your GitHub account if not already connected
+4. Find and select the **IntelliJudge** repository → click **"Connect"**
+
+### 2.3 Configure the service
+
+Fill in the form:
+
+| Field | Value |
+|---|---|
+| **Name** | `intellijudge-backend` |
+| **Region** | Oregon (US West) or Frankfurt (EU) |
+| **Branch** | `main` |
+| **Root Directory** | `backend` |
+| **Runtime** | `Docker` |
+| **Dockerfile Path** | `./Dockerfile` (Render looks inside Root Directory) |
+| **Plan** | `Free` |
+
+> **Important**: Set **Root Directory** to `backend` — this tells Render to use
+> `backend/Dockerfile` and `backend/requirements.txt` automatically.
+
+### 2.4 Add environment variables
+
+Scroll down to **"Environment Variables"** and add each one:
+
+```
+APP_NAME                 IntelliJudge
+APP_VERSION              0.1.0
+DEBUG                    False
+GROQ_MODEL               llama-3.3-70b-versatile
+GROQ_BASE_URL            https://api.groq.com/openai/v1
+DATABASE_URL             postgresql+asyncpg://...    ← from Neon Step 1
+JWT_SECRET               <generate below>
+GROQ_API_KEY             gsk_...                    ← from console.groq.com
+CLOUDINARY_CLOUD_NAME    your-cloud-name            ← from Cloudinary dashboard
+CLOUDINARY_API_KEY       your-api-key
+CLOUDINARY_API_SECRET    your-api-secret
+CORS_ORIGINS             ["https://your-app.vercel.app"]   ← update after Vercel deploy
+```
+
+**Generate JWT_SECRET** (run this in your terminal):
+```bash
+python3 -c "import secrets; print(secrets.token_hex(32))"
+```
+
+**Get Cloudinary credentials**:
+- Sign in at [cloudinary.com](https://cloudinary.com) → Dashboard → Account Details
+
+**Get Groq API key**:
+- Sign in at [console.groq.com](https://console.groq.com) → API Keys → Create new key
+
+### 2.5 Deploy
+
+Click **"Create Web Service"**. Render will:
+1. Clone your repository
+2. Build the Docker image (first build takes ~10–15 min because EasyOCR/PyTorch is large)
+3. Start the container
+4. Run your health check at `/health`
+
+Watch the **Logs** tab — you should eventually see:
+```
+🚀 IntelliJudge v0.1.0 starting...
+✅ Database connection verified
+✅ EasyOCR model ready
+```
+
+### 2.6 Save your backend URL
+
+Once deployed, Render gives you a URL like:
+```
+https://intellijudge-backend.onrender.com
+```
+**Copy this URL** — you need it for Vercel.
+
+### 2.7 Verify the backend
+
+Open your browser and visit:
+```
+https://intellijudge-backend.onrender.com/health
+```
+
+You should see:
+```json
+{
+  "success": true,
+  "data": {
+    "app": "IntelliJudge",
+    "version": "0.1.0",
+    "debug": false,
+    "database": "connected",
+    "timestamp": "..."
+  }
+}
+```
+
+If `database` says `unreachable`, double-check your `DATABASE_URL` value in Render.
+
+---
+
+## Step 3 — Deploy Frontend to Vercel
+
+### 3.1 Create Vercel account
+
+Go to **[vercel.com](https://vercel.com)** → **"Sign Up"** → sign in with GitHub.
+
+### 3.2 Import the project
+
+1. Click **"Add New..."** → **"Project"**
+2. Find your IntelliJudge repository → click **"Import"**
+
+### 3.3 Configure the project
+
+| Field | Value |
+|---|---|
+| **Framework Preset** | Next.js (auto-detected) |
+| **Root Directory** | `frontend` |
+| **Build Command** | `npm run build` (default) |
+| **Output Directory** | `.next` (default) |
+| **Install Command** | `npm install` (default) |
+
+### 3.4 Add the backend URL
+
+Under **"Environment Variables"**, add:
+
+| Name | Value |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | `https://intellijudge-backend.onrender.com/api` |
+
+Replace the URL with your actual Render backend URL from Step 2.6.
+
+### 3.5 Deploy
+
+Click **"Deploy"**. Vercel builds and deploys in ~2–3 minutes.
+
+You'll get a URL like:
+```
+https://intellijudge.vercel.app
 ```
 
 ---
 
-## 🔧 Prerequisites
+## Step 4 — Update CORS on the Backend
 
-Before deploying, you'll need:
+After Vercel gives you the frontend URL, you need to tell the backend to allow it.
 
-### 1. GitHub Repository
-- [ ] Create a GitHub repo for your project
-- [ ] Push your code (`git push origin main`)
-- [ ] Make sure `.env` is in `.gitignore` (secrets should never be committed)
-
-### 2. Account Signups
-- [ ] Vercel account (free): https://vercel.com
-- [ ] Railway account (free): https://railway.app
-- [ ] Neon account (free): https://neon.tech
-- [ ] Cloudinary account (free): https://cloudinary.com
-- [ ] Groq API key (free): https://console.groq.com
-
-### 3. Local Setup
-- [ ] Python 3.11+ installed locally
-- [ ] Node.js 20+ installed locally
-- [ ] Git installed and configured
+1. In **Render dashboard** → your `intellijudge-backend` service → **"Environment"**
+2. Find `CORS_ORIGINS` → click the pencil icon to edit
+3. Update the value:
+   ```
+   ["https://intellijudge.vercel.app"]
+   ```
+   Replace with your actual Vercel URL.
+4. Click **"Save Changes"** — Render redeploys automatically.
 
 ---
 
-## 🗄️ Step 1: Create PostgreSQL Database on Neon
+## Step 5 — Run Database Migrations
 
-Neon provides a free serverless PostgreSQL database perfect for this project.
+The database tables need to be created before the app works.
 
-### 1.1 Create a Neon Project
+### Option A — Render One-off Job (recommended)
 
-1. Go to https://neon.tech
-2. Sign up with GitHub or email
-3. Create a new project:
-   - **Project name**: `intellijudge`
-   - **Database name**: `intellijudge`
-   - **Region**: Choose closest to you
-4. Click "Create project" and wait for it to initialize
+1. In Render dashboard → **"New +"** → **"Job"**
+2. Connect the same repository
+3. Root Directory: `backend`
+4. Build Command: *(leave empty)*
+5. Command: `alembic upgrade head`
+6. Add the same `DATABASE_URL` environment variable
+7. Click **"Create Job"** → it runs once and creates all tables
 
-### 1.2 Get the Connection String
-
-1. In Neon dashboard, go to **Connection string**
-2. Select **Python** from the dropdown
-3. Copy the connection string (it looks like):
-   ```
-   postgresql+asyncpg://user:password@ep-xxx.us-east-1.neon.tech/intellijudge?sslmode=require
-   ```
-4. **Save this** — you'll need it for Railway environment variables
-
-### 1.3 Test the Connection Locally
-
-Before deploying, test that the connection works:
+### Option B — Run locally against Neon
 
 ```bash
-# In the backend directory
-export DATABASE_URL="postgresql+asyncpg://..."  # Paste your Neon URL
 cd backend
-python -c "from app.database import AsyncSessionLocal; print('✅ Database connection OK')"
+source venv/bin/activate
+export DATABASE_URL="postgresql+asyncpg://user:password@host/intellijudge?sslmode=require"
+alembic upgrade head
 ```
 
 ---
 
-## 🚂 Step 2: Deploy Backend to Railway
+## Step 6 — End-to-End Test
 
-Railway is a cloud platform that runs Docker containers. We'll deploy the FastAPI backend here.
+Open your Vercel frontend URL and test the full flow:
 
-### 2.1 Prepare Backend Environment Variables
+1. **Register** — visit `/register`, create a new account
+2. **Login** — visit `/login`, sign in
+3. **Dashboard** — should load with empty problems list
+4. **Upload** — go to `/upload`, drag-and-drop a screenshot of a coding problem
+5. **Problem** — OCR + AI reconstruction should create the problem
+6. **Code** — write a solution in the Monaco editor, click **Run** then **Submit**
+7. **Analytics** — visit `/analytics` to see your stats
 
-Create a list of all variables needed in production:
-
-```
-DATABASE_URL = postgresql+asyncpg://...  (from Neon above)
-GROQ_API_KEY = gsk_...  (from https://console.groq.com)
-CLOUDINARY_CLOUD_NAME = (from https://cloudinary.com dashboard)
-CLOUDINARY_API_KEY = (from Cloudinary dashboard)
-CLOUDINARY_API_SECRET = (from Cloudinary dashboard)
-JWT_SECRET = (generate: python -c "import secrets; print(secrets.token_hex(32))")
-CORS_ORIGINS = ["https://intellijudge.vercel.app"]
-DEBUG = False
-APP_NAME = IntelliJudge
-APP_VERSION = 0.1.0
-```
-
-### 2.2 Connect Railway to GitHub
-
-1. Go to https://railway.app
-2. Sign in with GitHub
-3. Create a new project → "Deploy from GitHub repo"
-4. Select your IntelliJudge repository
-5. Choose the root directory if prompted
-
-### 2.3 Configure Railway Environment Variables
-
-1. In Railway project dashboard, click **Variables**
-2. Add all variables from step 2.1 above
-   - Click **+ New Variable** for each one
-   - **Name** (left): `DATABASE_URL`
-   - **Value** (right): `postgresql+asyncpg://...`
-
-### 2.4 Configure Build Settings
-
-1. In project settings, ensure:
-   - **Build** command: (leave empty — Railway auto-detects)
-   - **Start** command: (leave empty if Dockerfile exists)
-   - Railway should auto-detect the Dockerfile and run it
-
-2. If using Dockerfile:
-   - Railway will automatically use `backend/Dockerfile`
-   - The Dockerfile contains: `CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 4"]`
-
-### 2.5 Deploy & Get Backend URL
-
-1. Railway will automatically deploy when you push to main
-2. Wait for deployment to complete (watch the logs)
-3. Once deployed, click the deployment and you'll see a URL like:
-   ```
-   https://intellijudge-api-production.up.railway.app
-   ```
-4. **Save this URL** — you'll need it for the frontend
-
-### 2.6 Verify Backend is Running
+### Quick API test from terminal
 
 ```bash
-# From your terminal
-curl https://intellijudge-api-production.up.railway.app/health
+# Replace with your actual Render URL
+BACKEND=https://intellijudge-backend.onrender.com
 
-# You should get:
-# {
-#   "success": true,
-#   "data": {
-#     "app": "IntelliJudge",
-#     "version": "0.1.0",
-#     "debug": false,
-#     "database": "connected",
-#     "timestamp": "2026-05-25T10:30:00+00:00"
-#   }
-# }
+# Health check
+curl $BACKEND/health
+
+# Register a user
+curl -X POST $BACKEND/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","username":"testuser","password":"Test123!"}'
 ```
 
 ---
 
-## 🎨 Step 3: Deploy Frontend to Vercel
+## 🚨 Troubleshooting
 
-### 3.1 Connect Vercel to GitHub
+### "CORS error" in browser console
 
-1. Go to https://vercel.com
-2. Sign in with GitHub
-3. Click "Add New..." → "Project"
-4. Select your IntelliJudge repository
-5. Configure build settings:
-   - **Framework Preset**: Next.js
-   - **Root Directory**: `frontend`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `.next`
-   - **Install Command**: `npm install`
+The backend doesn't have your Vercel URL in its allowed origins.
 
-### 3.2 Add Environment Variables to Vercel
+**Fix**: In Render environment variables, set:
+```
+CORS_ORIGINS = ["https://your-actual-vercel-url.vercel.app"]
+```
+Then wait for Render to redeploy (~1 minute).
 
-In the Vercel project settings, add:
+### Backend not responding / 502 Bad Gateway
 
-**Environment Variables** tab:
+The free-tier service has spun down (15 min inactivity).
 
-1. Click "Add New"
-   - **Name**: `NEXT_PUBLIC_API_URL`
-   - **Value**: `https://intellijudge-api-production.up.railway.app/api` (replace with your Railway URL)
-   - **Environments**: Production, Preview, Development
-   - Click "Save"
+**Fix**: The first request wakes it up. Wait 30–60 seconds and try again. Subsequent requests are fast.
 
-The `NEXT_PUBLIC_` prefix makes it available in the browser (not secret).
+**Keep-alive tip**: Use a free cron service like [cron-job.org](https://cron-job.org) to ping `https://your-backend.onrender.com/health` every 14 minutes to prevent spin-down.
 
-### 3.3 Deploy to Vercel
+### "Database: unreachable" in health check
 
-1. Click "Deploy"
-2. Vercel will:
-   - Checkout your code from GitHub
-   - Run `npm install` in the `frontend` directory
-   - Run `npm run build`
-   - Upload build artifacts to Vercel's CDN
-   - Give you a live URL
+`DATABASE_URL` is wrong or missing in Render.
 
-3. Wait for deployment to complete
-4. You'll get a URL like: `https://intellijudge.vercel.app`
+**Fix**:
+1. Go to Neon → Connection Details → select **asyncpg** → copy the full URL
+2. Paste it as `DATABASE_URL` in Render environment variables
+3. Make sure there are no extra spaces or line breaks
 
-### 3.4 Verify Frontend is Running
+### Build fails with OOM error
 
-1. Open https://intellijudge.vercel.app in your browser
-2. You should see the landing page
-3. Try navigating to `/register` and `/login`
-4. Check browser console (F12 → Console) for any API errors
+EasyOCR/PyTorch installation can be memory-intensive during the build.
+
+**Fix**: Trigger a manual redeploy in Render — builds can occasionally fail on memory spikes. Usually succeeds on retry.
+
+### "Tables don't exist" — database errors on first use
+
+Migrations haven't been run yet.
+
+**Fix**: Follow Step 5 above to run `alembic upgrade head`.
+
+### Groq API errors
+
+**Fix**: Check that `GROQ_API_KEY` is set correctly in Render (no leading/trailing spaces). Generate a fresh key at [console.groq.com](https://console.groq.com) if needed.
 
 ---
 
-## 🔐 Step 4: Update Backend CORS for Vercel Domain
+## 🔄 Continuous Deployment
 
-After Vercel deployment, update the backend CORS configuration:
-
-### 4.1 Update backend/app/config.py
-
-The CORS_ORIGINS should include your Vercel URL:
-
-```python
-CORS_ORIGINS: list[str] = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "https://intellijudge.vercel.app",  # ← Add your actual Vercel URL
-]
-```
-
-But Vercel URL can change on each deployment. Better approach: use environment variable.
-
-### 4.2 Alternative: Use Environment Variable
-
-Instead of hardcoding, read from .env:
-
-```python
-# In backend/app/config.py
-CORS_ORIGINS: list[str] = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
-
-# Allow additional origins from environment
-if env_origins := os.getenv("CORS_ORIGINS"):
-    CORS_ORIGINS.extend(json.loads(env_origins))
-```
-
-Then in Railway environment variables, add:
-```
-CORS_ORIGINS = ["https://intellijudge.vercel.app"]
-```
-
-### 4.3 Redeploy Backend
-
-1. Push the updated code to GitHub: `git push origin main`
-2. Railway will automatically redeploy when you push
-3. Or manually trigger in Railway dashboard: **Deploy** → **Redeploy main branch**
-
----
-
-## 🧪 Step 5: End-to-End Testing
-
-### 5.1 Test Frontend → Backend Connection
+After initial setup, every `git push origin main` automatically:
+- Rebuilds and redeploys the **Vercel** frontend (~2 min)
+- Rebuilds and redeploys the **Render** backend (~5–10 min for Docker)
 
 ```bash
-# In browser console (F12):
-await fetch('https://intellijudge-api-production.up.railway.app/health')
-  .then(r => r.json())
-  .then(d => console.log(d))
-
-# Should show database: "connected"
-```
-
-### 5.2 Test Registration
-
-1. Visit https://intellijudge.vercel.app/register
-2. Fill in email, username, password
-3. Click "Register"
-4. Should redirect to login page
-5. Check Network tab (F12) to see the API request succeeded
-
-### 5.3 Test Login
-
-1. Visit https://intellijudge.vercel.app/login
-2. Use credentials from above
-3. Click "Login"
-4. Should redirect to dashboard
-5. Check localStorage (F12 → Application → Local Storage) for JWT token
-
-### 5.4 Test Problem Upload
-
-1. Go to Upload page
-2. Try uploading a screenshot of a coding problem
-3. Should:
-   - Show preview of image
-   - Run OCR extraction
-   - Call Groq API for reconstruction
-   - Save to database
-   - Redirect to problem page
-
----
-
-## 📊 Step 6: Monitor Production
-
-### 6.1 View Logs
-
-**Vercel Logs:**
-1. In Vercel dashboard, click your project
-2. Go to **Deployments**
-3. Click recent deployment → **Logs**
-4. Watch real-time logs as requests come in
-
-**Railway Logs:**
-1. In Railway dashboard, click your project
-2. Select the service (your backend)
-3. Click **Logs** tab
-4. Watch real-time logs from FastAPI
-
-### 6.2 Set Up Error Tracking (Optional)
-
-Consider adding error tracking for production:
-
-- **Sentry** (https://sentry.io) — tracks backend exceptions
-- **LogRocket** (https://logrocket.com) — tracks frontend errors
-
-### 6.3 Monitor Database
-
-Neon dashboard shows:
-- Query performance
-- Connection count
-- Backup history
-
----
-
-## 🚨 Troubleshooting Common Issues
-
-### Issue: "CORS error" in browser console
-
-**Cause**: Backend doesn't have frontend URL in CORS_ORIGINS
-
-**Fix**:
-1. Get your Vercel URL
-2. Add to Railway environment variable: `CORS_ORIGINS=["https://your-vercel-url.app"]`
-3. Redeploy backend
-
-### Issue: "Cannot connect to database"
-
-**Cause**: DATABASE_URL not set in Railway, or URL is wrong
-
-**Fix**:
-1. Test locally: `python -c "from app.database import AsyncSessionLocal; print('OK')"`
-2. Check Railway variables: is `DATABASE_URL` set?
-3. Copy from Neon again (make sure "asyncpg" driver selected)
-4. Redeploy
-
-### Issue: "Groq API key invalid"
-
-**Cause**: GROQ_API_KEY not set or wrong value
-
-**Fix**:
-1. Generate new key at https://console.groq.com
-2. Copy exactly (no extra spaces)
-3. Set in Railway environment variables
-4. Redeploy
-
-### Issue: Frontend shows blank page
-
-**Cause**: Build failed or wrong configuration
-
-**Fix**:
-1. Check Vercel deployment logs
-2. Look for TypeScript errors or build errors
-3. Fix and push to GitHub (Vercel redeploys automatically)
-
-### Issue: Code execution not working
-
-**Cause**: Compilers not installed in Docker container
-
-**Fix**:
-1. Dockerfile includes: `gcc`, `g++`, `openjdk-17-jdk`, `python3`
-2. Make sure Railway is using the Dockerfile
-3. Check backend logs for compiler errors
-4. Test locally: `g++ --version`, `javac -version`, etc.
-
----
-
-## 📝 Environment Variables Checklist
-
-### Frontend (.env in Vercel)
-
-```
-NEXT_PUBLIC_API_URL=https://your-railway-url.up.railway.app/api
-```
-
-### Backend (.env in Railway)
-
-```
-DATABASE_URL=postgresql+asyncpg://...
-GROQ_API_KEY=gsk_...
-CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_API_KEY=...
-CLOUDINARY_API_SECRET=...
-JWT_SECRET=...
-CORS_ORIGINS=["https://your-vercel-url.vercel.app"]
-DEBUG=False
-APP_NAME=IntelliJudge
-APP_VERSION=0.1.0
+# Your everyday workflow
+git add .
+git commit -m "feat: add something cool"
+git push origin main
+# Both platforms auto-deploy → done
 ```
 
 ---
 
-## 🔄 Continuous Deployment Workflow
+## 📋 Environment Variables Reference
 
-After initial deployment, here's the workflow:
+### Backend (set in Render dashboard)
 
-```
-1. Make code changes locally
-   git add .
-   git commit -m "Fix: ..."
+| Variable | Example Value | Where to Get It |
+|---|---|---|
+| `DATABASE_URL` | `postgresql+asyncpg://...` | Neon → Connection Details (asyncpg) |
+| `JWT_SECRET` | 64-char random hex | `python3 -c "import secrets; print(secrets.token_hex(32))"` |
+| `GROQ_API_KEY` | `gsk_...` | console.groq.com |
+| `GROQ_MODEL` | `llama-3.3-70b-versatile` | Fixed value |
+| `GROQ_BASE_URL` | `https://api.groq.com/openai/v1` | Fixed value |
+| `CLOUDINARY_CLOUD_NAME` | `mycloud` | Cloudinary dashboard |
+| `CLOUDINARY_API_KEY` | `123456789` | Cloudinary dashboard |
+| `CLOUDINARY_API_SECRET` | `abc123...` | Cloudinary dashboard |
+| `CORS_ORIGINS` | `["https://your-app.vercel.app"]` | Your Vercel URL |
+| `DEBUG` | `False` | Fixed value |
 
-2. Push to GitHub
-   git push origin main
+### Frontend (set in Vercel dashboard)
 
-3. Vercel automatically redeploys frontend
-   → New build in ~2-3 minutes
-
-4. Railway automatically redeploys backend
-   → New image in ~3-5 minutes
-
-5. Monitor logs to ensure no errors
-
-6. Test the feature in production
-```
-
----
-
-## ✅ Deployment Checklist
-
-- [ ] Created Neon PostgreSQL database
-- [ ] Saved DATABASE_URL from Neon
-- [ ] Set up Railway project connected to GitHub
-- [ ] Added all environment variables to Railway
-- [ ] Verified backend deployed and `/health` endpoint works
-- [ ] Deployed frontend to Vercel
-- [ ] Added NEXT_PUBLIC_API_URL to Vercel env vars
-- [ ] Updated CORS_ORIGINS in backend config with Vercel URL
-- [ ] Tested registration → login → upload flow end-to-end
-- [ ] Checked logs for any errors
-- [ ] Tested from different browser (not development browser)
+| Variable | Value |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | `https://your-backend.onrender.com/api` |
 
 ---
 
 ## 📚 Useful Links
 
-| Resource | Link |
-|----------|------|
-| Vercel Docs | https://vercel.com/docs |
-| Railway Docs | https://docs.railway.app |
-| Neon Docs | https://neon.tech/docs |
-| FastAPI Deployment | https://fastapi.tiangolo.com/deployment/ |
-| Next.js Deployment | https://nextjs.org/docs/app/building-your-application/deploying |
-| Cloudinary Docs | https://cloudinary.com/documentation |
-| Groq Console | https://console.groq.com |
+| Resource | URL |
+|---|---|
+| Render Docs | render.com/docs |
+| Render Blueprint spec | render.com/docs/blueprint-spec |
+| Neon Docs | neon.tech/docs |
+| Vercel Docs | vercel.com/docs |
+| Groq Console | console.groq.com |
+| Cloudinary Docs | cloudinary.com/documentation |
+| FastAPI Deployment | fastapi.tiangolo.com/deployment |
 
 ---
 
-## 🎯 Your Production URLs
-
-Once deployed, save these:
+## 🎯 Your Production URLs (fill in after deploying)
 
 ```
-Frontend (Vercel):  https://intellijudge.vercel.app
-Backend (Railway):  https://intellijudge-api-production.up.railway.app
-Database (Neon):    neon.tech dashboard
+Frontend (Vercel):   https://_____________________.vercel.app
+Backend (Render):    https://_____________________.onrender.com
+API Docs (Swagger):  https://_____________________.onrender.com/docs
+Database (Neon):     neon.tech dashboard (private)
 ```
 
 ---
 
-**Generated**: May 25, 2026
-**Status**: ✅ Ready for Deployment
+*Last updated: 2026-05-25 | Stack: Vercel + Render + Neon — 100% Free*

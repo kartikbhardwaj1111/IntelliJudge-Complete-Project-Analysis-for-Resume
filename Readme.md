@@ -83,7 +83,7 @@ No way to reconstruct it. No test cases. No practice environment.
 ### 🔐 Secure & Scalable
 - **JWT + bcrypt Auth** — Stateless token-based authentication with bcrypt password hashing (12 salt rounds)
 - **Fully Async** — FastAPI + SQLAlchemy async + asyncpg — zero blocking I/O from endpoint to database
-- **Cloud-Native Stack** — Cloudinary CDN for screenshots, Neon serverless PostgreSQL, Vercel + Railway deploy
+- **Cloud-Native Stack** — Cloudinary CDN for screenshots, Neon serverless PostgreSQL, Vercel + Render deploy
 - **End-to-End Type Safety** — TypeScript strict mode on frontend, Pydantic validation on all backend endpoints
 
 </td>
@@ -288,7 +288,7 @@ erDiagram
 | **Code Execution** | Piston API | v2 | Free, open sandboxed multi-language runner |
 | **Image Storage** | Cloudinary | — | CDN-backed screenshot hosting + auto-optimize |
 | **Authentication** | JWT + bcrypt | — | Stateless token auth with secure password hashing |
-| **Deployment** | Vercel + Railway | — | Frontend on Vercel, backend on Railway (Docker) |
+| **Deployment** | Vercel + Render | — | Frontend on Vercel, backend on Render (Docker, free tier) |
 
 ---
 
@@ -386,10 +386,10 @@ IntelliJudge/
 │   │   ├── 📂 utils/                    # JWT helpers, bcrypt, exceptions, rate limiter
 │   │   └── 📂 migrations/              # Alembic version history
 │   ├── requirements.txt
-│   ├── Dockerfile                       # Multi-stage Railway deploy image
+│   ├── Dockerfile                       # Render-optimised Docker image (1 worker, no JDK)
 │   └── .env.example
 │
-├── railway.json                         # Railway backend service configuration
+├── render.yaml                          # Render Blueprint — backend service config
 ├── judge0-compose.yml                   # Optional local Judge0 Docker setup
 └── README.md
 ```
@@ -590,46 +590,53 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api
 
 ## 🚢 Deployment
 
+> **100% Free** — Vercel + Render + Neon, no credit card required.
+
 <div align="center">
 
 | Service | Platform | Config | Auto-Deploy |
 |---|---|---|:---:|
 | **Frontend** | [Vercel](https://vercel.com/) | `frontend/vercel.json` | ✅ from `main` |
-| **Backend** | [Railway](https://railway.app/) | `railway.json` + `Dockerfile` | ✅ from `main` |
+| **Backend** | [Render](https://render.com/) | `render.yaml` + `Dockerfile` | ✅ from `main` |
 | **Database** | [Neon](https://neon.tech/) | Env var `DATABASE_URL` | — |
 | **Images** | [Cloudinary](https://cloudinary.com/) | Env vars | — |
 
 </div>
 
+> **Render Free Tier Note:** The backend spins down after 15 min of inactivity.
+> First request after sleep takes ~30–60 s. This is normal on the free plan.
+
 ### Step-by-step
 
-**① Database — Neon (free)**
+**① Database — Neon**
 ```
 neon.tech → New Project → Connection Details → select "asyncpg" driver → copy URL
 ```
 
-**② Backend — Railway**
+**② Backend — Render**
 ```
-railway.app → New Project → Deploy from GitHub →
-  Root Directory: backend
-  + Add env variables from backend/.env.example
-  + Set CORS_ORIGINS to your Vercel URL
-Railway auto-detects the Dockerfile and builds
+render.com → New Web Service → Connect GitHub repo →
+  Root Directory: backend   |   Runtime: Docker   |   Plan: Free
+  + Add all env vars (DATABASE_URL, JWT_SECRET, GROQ_API_KEY, Cloudinary keys)
+  + Set CORS_ORIGINS to ["https://your-app.vercel.app"]
+Render reads backend/Dockerfile automatically
 ```
 
 **③ Frontend — Vercel**
 ```
 vercel.com → Import from GitHub →
   Root Directory: frontend
-  + Add: NEXT_PUBLIC_API_URL = https://your-backend.railway.app/api
+  + Add: NEXT_PUBLIC_API_URL = https://your-backend.onrender.com/api
 Deploy → get your live URL
 ```
 
-**④ Run migrations**
+**④ Run database migrations**
 ```bash
-# In Railway → your backend service → New Job:
-alembic upgrade head
+# Locally against Neon (or Render one-off job):
+cd backend && alembic upgrade head
 ```
+
+See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for the full beginner-friendly walkthrough.
 
 ---
 

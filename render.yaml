@@ -1,0 +1,49 @@
+# ============================================================
+# IntelliJudge — Render Blueprint
+# ============================================================
+# This file configures the backend deployment on Render.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# USAGE:
+#   1. Push this file to GitHub
+#   2. In Render dashboard → New → Blueprint
+#   3. Connect your repo — Render reads this file automatically
+#   4. Add the secret env vars in the Render dashboard
+# ============================================================
+
+services:
+  - type: web
+    name: intellijudge-backend
+    env: docker
+    # Docker build context is the backend/ subdirectory
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon          # Change to "frankfurt" if your users are in EU
+    healthCheckPath: /health
+
+    # ── Non-secret environment variables ──────────────────────
+    # Set these here; they are committed to git (safe — no secrets).
+    # Secret vars (API keys, DB URL, JWT) must be added manually
+    # in the Render dashboard under Environment → Secret Files.
+    envVars:
+      - key: APP_NAME
+        value: IntelliJudge
+      - key: APP_VERSION
+        value: "0.1.0"
+      - key: DEBUG
+        value: "False"
+      - key: HOST
+        value: "0.0.0.0"
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: GROQ_BASE_URL
+        value: https://api.groq.com/openai/v1
+      # ── Secret vars — add these in Render dashboard ─────────
+      # DATABASE_URL     → postgresql+asyncpg://... (from Neon)
+      # JWT_SECRET       → python -c "import secrets; print(secrets.token_hex(32))"
+      # GROQ_API_KEY     → from console.groq.com
+      # CLOUDINARY_CLOUD_NAME
+      # CLOUDINARY_API_KEY
+      # CLOUDINARY_API_SECRET
+      # CORS_ORIGINS     → ["https://your-app.vercel.app"]
